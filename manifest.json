@@ -1,0 +1,34 @@
+{
+  "id": "terminal",
+  "title": "Terminal",
+  "description": "Interactive system-user terminal with administrator permission checks.",
+  "version": "0.2.2",
+  "api": 1,
+  "core": ">=0.2.0,<0.3.0",
+  "architecture": "arm64",
+  "signer": "ostojaos-ci",
+  "service": "bin/server",
+  "dependencies": {},
+  "packages": {
+    "bash": "5.0",
+    "util-linux": "2.38",
+    "libc6": "2.34",
+    "libpam0g": "1.4.0"
+  },
+  "userShell": true,
+  "translations": {
+    "en": {
+      "title": "Terminal",
+      "description": "Interactive system-user terminal with administrator permission checks."
+    },
+    "ru": {
+      "title": "Терминал",
+      "description": "Интерактивный терминал системного пользователя с проверкой прав администратора."
+    },
+    "uk": {
+      "title": "Термінал",
+      "description": "Інтерактивний термінал системного користувача з перевіркою прав адміністратора."
+    }
+  },
+  "license": "PolyForm-Noncommercial-1.0.0"
+}
