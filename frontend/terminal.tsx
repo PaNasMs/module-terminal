@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { Terminal } from "@xterm/xterm";
 import { FitAddon } from "@xterm/addon-fit";
 import "@xterm/xterm/css/xterm.css";
-import { Button, Notice } from "@ostojaos/ui";
+import { Button, Notice } from "@panasms/ui";
 export function TerminalPage() {
   const host = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(false);
@@ -82,7 +82,7 @@ export function TerminalPage() {
     </>
   );
 }
-import { registerModule } from "@ostojaos/runtime";
+import { registerModule } from "@panasms/runtime";
 import { mdiConsole } from "@mdi/js";
 registerModule({
   id: "terminal",

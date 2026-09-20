@@ -11,7 +11,7 @@ import (
 	"os"
 	"os/exec"
 	"os/user"
-	"github.com/OstojaOS/module-sdk/auth"
+	"github.com/PaNasMs/module-sdk/auth"
 	"strconv"
 	"strings"
 	"sync/atomic"
