@@ -1,17 +1,21 @@
+import { mdiConsole, mdiClose, mdiRefresh } from "@mdi/js";
 import { tr } from "./i18n";
 import { useEffect, useRef, useState } from "react";
 import { Terminal } from "@xterm/xterm";
 import { FitAddon } from "@xterm/addon-fit";
 import "@xterm/xterm/css/xterm.css";
-import { Button, Notice } from "@panasms/ui";
+import { Button, Icon, Notice } from "@panasms/ui";
 export function TerminalPage() {
   const host = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(false);
+  const [connection, setConnection] = useState("idle");
+  const [attempt, setAttempt] = useState(0);
   const [status, setStatus] = useState("");
   useEffect(() => {
     if (!active || !host.current) return;
     const term = new Terminal({
-      cursorBlink: true,
+      cursorBlink: !matchMedia("(prefers-reduced-motion: reduce)").matches,
+      screenReaderMode: true,
       scrollback: 2000,
       convertEol: false,
       fontSize: 14,
@@ -24,11 +28,13 @@ export function TerminalPage() {
       `${location.protocol === "https:" ? "wss:" : "ws:"}//${location.host}/api/v1/terminal`,
     );
     socket.binaryType = "arraybuffer";
+    setConnection("connecting");
     setStatus(tr("connecting_40b27edf"));
     const send = (v: unknown) => {
       if (socket.readyState === WebSocket.OPEN) socket.send(JSON.stringify(v));
     };
     socket.onopen = () => {
+      setConnection("connected");
       setStatus(tr("mounted_81e0cd16"));
       fit.fit();
       send({ type: "resize", rows: term.rows, cols: term.cols });
@@ -36,8 +42,8 @@ export function TerminalPage() {
     };
     socket.onmessage = (e) =>
       term.write(typeof e.data === "string" ? e.data : new Uint8Array(e.data));
-    socket.onclose = () => setStatus(tr("terminal_closed_c50ea89b"));
-    socket.onerror = () => setStatus(tr("connection_error_0e1c60a0"));
+    socket.onclose = () => { setConnection("closed"); setStatus(tr("terminal_closed_c50ea89b")); };
+    socket.onerror = () => { setConnection("error"); setStatus(tr("connection_error_0e1c60a0")); };
     const input = term.onData((data) => send({ type: "input", data }));
     const resize = term.onResize((s) =>
       send({ type: "resize", rows: s.rows, cols: s.cols }),
@@ -51,7 +57,7 @@ export function TerminalPage() {
       socket.close();
       term.dispose();
     };
-  }, [active]);
+  }, [active, attempt]);
   return (
     <>
       <div className="page-heading">
@@ -61,14 +67,15 @@ export function TerminalPage() {
             {tr("your_system_user_s_shell_leaving_this_page_closes__e978a063")}
           </p>
         </div>
-        <Button onClick={() => setActive(!active)}>
-          {active
-            ? tr("close_terminal_93e0366b")
-            : tr("open_terminal_6c5b2221")}
-        </Button>
+        <div className="actions">
+          {active && ['closed','error'].includes(connection) && <Button title={tr('reconnect')} aria-label={tr('reconnect')} onClick={() => setAttempt(v => v + 1)}><Icon path={mdiRefresh} /></Button>}
+          <Button title={tr(active ? 'close_terminal_93e0366b' : 'open_terminal_6c5b2221')} aria-label={tr(active ? 'close_terminal_93e0366b' : 'open_terminal_6c5b2221')} onClick={() => { setActive(!active); setStatus(''); }}><Icon path={active ? mdiClose : mdiConsole} /></Button>
+        </div>
       </div>
       {status && <Notice>{status}</Notice>}
+      {!active && <section className="surface empty-state"><Icon path={mdiConsole} size={40} /><h2>{tr("open_terminal_6c5b2221")}</h2><p className="muted">{tr("ready")}</p></section>}
       <div
+        hidden={!active}
         ref={host}
         className="terminal-surface"
         style={{
@@ -83,7 +90,7 @@ export function TerminalPage() {
   );
 }
 import { registerModule } from "@panasms/runtime";
-import { mdiConsole } from "@mdi/js";
+
 registerModule({
   id: "terminal",
   title: tr("terminal_b7135883"),

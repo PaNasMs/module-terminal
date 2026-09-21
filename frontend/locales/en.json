@@ -6,5 +6,7 @@
   "terminal_b7135883": "Terminal",
   "your_system_user_s_shell_leaving_this_page_closes__e978a063": "Your system user's shell. Leaving this page closes the connection.",
   "close_terminal_93e0366b": "Close terminal",
-  "open_terminal_6c5b2221": "Open terminal"
+  "open_terminal_6c5b2221": "Open terminal",
+  "reconnect": "Reconnect",
+  "ready": "Open a session as your Linux user."
 }
