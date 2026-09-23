@@ -47,3 +47,9 @@ Publish a new version instead of replacing an existing release.
 
 Public documentation is maintained in English. Original code uses
 [PolyForm Noncommercial 1.0.0](LICENSE); see [NOTICE](NOTICE) for third-party scope.
+
+## Terminal tabs
+
+Opening Terminal starts a shell automatically. Use the plus button to create independent sessions. Switching tabs keeps their shells and output alive; closing a tab ends that session. Switching to another panel section keeps all sessions and output alive. Reloading or closing the browser tab, or signing out, closes them. Use the reconnect action after a connection ends. Arrow keys, Home, and End navigate the tab strip.
+
+While sessions are live, a terminal icon and count appear in the application bar across sections. Its menu returns to Terminal or closes every session in the current browser tab after confirmation. Sessions in other browser tabs are unaffected.

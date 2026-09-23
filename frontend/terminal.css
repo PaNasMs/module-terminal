@@ -1,0 +1,22 @@
+.terminal-workspace { overflow: hidden; }
+.terminal-tabs { display: flex; align-items: stretch; flex-wrap: nowrap; }
+.terminal-tab { display: flex; align-items: stretch; flex-shrink: 0; border-right: 1px solid var(--line); }
+.terminal-tab[data-state="active"] { background: var(--panel); box-shadow: inset 0 3px var(--accent); }
+.terminal-workspace > .terminal-tabs .terminal-tab > button { border-right: 0; background: transparent; box-shadow: none; }
+.terminal-tab > button[role="tab"] { display: flex; align-items: center; gap: 8px; font: inherit; cursor: pointer; }
+.terminal-workspace > .terminal-tabs .terminal-tab > .button { padding-inline: 8px; min-width: 32px; }
+.terminal-tab svg { width: 18px; height: 18px; }
+.terminal-workspace > .terminal-panel { position: relative; padding: 0; background: #000; }
+.terminal-status-overlay { position: absolute; top: 10px; right: 20px; z-index: 2; display: flex; align-items: center; gap: 6px; border-radius: 6px; background: #000c; }
+.terminal-connection { display: inline-flex; padding: 5px; color: #aab4c0; }
+.terminal-connection svg { width: 20px; height: 20px; }
+.terminal-connection-connected { color: #7bdbaa; }
+.terminal-connection-error { color: #ff9b94; }
+.terminal-status-overlay .button { background: transparent; border: 0; color: #e6edf3; min-width: 30px; min-height: 30px; padding: 5px; }
+.terminal-session-host { height: max(300px, 62vh); padding: 12px; background: #000; }
+.terminal-workspace [hidden] { display: none; }
+
+.terminal-activity { flex-shrink: 0; }
+.terminal-activity > summary { cursor: pointer; color: var(--accent); }
+.terminal-activity .profile-dropdown { left: 0; right: auto; width: max-content; max-width: min(320px, 90vw); }
+.terminal-stop-dialog { max-width: 440px; }

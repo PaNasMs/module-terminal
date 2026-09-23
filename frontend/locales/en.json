@@ -4,9 +4,14 @@
   "terminal_closed_c50ea89b": "Terminal closed",
   "connection_error_0e1c60a0": "Connection error",
   "terminal_b7135883": "Terminal",
-  "your_system_user_s_shell_leaving_this_page_closes__e978a063": "Your system user's shell. Leaving this page closes the connection.",
+  "your_system_user_s_shell_leaving_this_page_closes__e978a063": "Sessions stay open when switching sections. Reloading or closing the browser tab ends them.",
   "close_terminal_93e0366b": "Close terminal",
   "open_terminal_6c5b2221": "Open terminal",
   "reconnect": "Reconnect",
-  "ready": "Open a session as your Linux user."
+  "ready": "Open a session as your Linux user.",
+  "runningSessions": "Active terminals",
+  "returnToTerminal": "Return to terminals",
+  "stopAll": "Close all terminals",
+  "stopAllWarning": "Close all terminal sessions in this browser tab? Running commands may be interrupted and terminal output will be cleared.",
+  "cancel": "Cancel"
 }
