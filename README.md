@@ -53,3 +53,12 @@ Public documentation is maintained in English. Original code uses
 Opening Terminal starts a shell automatically. Use the plus button to create independent sessions. Switching tabs keeps their shells and output alive; closing a tab ends that session. Switching to another panel section keeps all sessions and output alive. Reloading or closing the browser tab, or signing out, closes them. Use the reconnect action after a connection ends. Arrow keys, Home, and End navigate the tab strip.
 
 While sessions are live, a terminal icon and count appear in the application bar across sections. Its menu returns to Terminal or closes every session in the current browser tab after confirmation. Sessions in other browser tabs are unaffected.
+
+### Permissions of user files
+
+New user files and directories use the system `UMASK` from `/etc/login.defs`
+(`022` if unset), rather than the private service mask. Ownership remains with
+the Linux user running the operation. Parent-directory setgid and default ACLs
+still apply; existing files are not changed. Private module state and credentials
+retain restrictive permissions. Terminal startup scripts can override the initial
+shell mask.

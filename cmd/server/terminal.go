@@ -4,6 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/PaNasMs/module-sdk/auth"
+	"github.com/PaNasMs/module-sdk/userfiles"
 	"github.com/coder/websocket"
 	"golang.org/x/sys/unix"
 	"log"
@@ -11,7 +13,6 @@ import (
 	"os"
 	"os/exec"
 	"os/user"
-	"github.com/PaNasMs/module-sdk/auth"
 	"strconv"
 	"strings"
 	"sync/atomic"
@@ -75,6 +76,11 @@ func terminalHandler(allowed map[string]bool) http.HandlerFunc {
 			return
 		}
 		unix.IoctlSetWinsize(fd, unix.TIOCSWINSZ, &unix.Winsize{Row: 24, Col: 80})
+		mask, err := userfiles.DefaultUmask()
+		if err != nil {
+			http.Error(w, "user file permissions unavailable", 503)
+			return
+		}
 		c, err := websocket.Accept(w, r, &websocket.AcceptOptions{InsecureSkipVerify: true})
 		if err != nil {
 			return
@@ -87,7 +93,7 @@ func terminalHandler(allowed map[string]bool) http.HandlerFunc {
 		for _, g := range gids {
 			groupIDs = append(groupIDs, strconv.Itoa(int(g)))
 		}
-		cmd := exec.Command("/usr/bin/nsenter", "--mount=/proc/1/ns/mnt", "--wd="+u.HomeDir, "--", "/usr/bin/setpriv", "--reuid", strconv.Itoa(id.UID), "--regid", strconv.Itoa(gid), "--groups", strings.Join(groupIDs, ","), "/bin/bash", "--login")
+		cmd := exec.Command("/usr/bin/nsenter", "--mount=/proc/1/ns/mnt", "--wd="+u.HomeDir, "--", "/usr/bin/setpriv", "--reuid", strconv.Itoa(id.UID), "--regid", strconv.Itoa(gid), "--groups", strings.Join(groupIDs, ","), "/bin/sh", "-c", `umask "$1"; shift; exec "$@"`, "panasms-terminal", fmt.Sprintf("%03o", mask), "/bin/bash", "--login")
 		cmd.Dir = u.HomeDir
 		cmd.Env = []string{"HOME=" + u.HomeDir, "USER=" + u.Username, "LOGNAME=" + u.Username, "TERM=xterm-256color", "LANG=C.UTF-8", "PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin"}
 		cmd.Stdin = slave
