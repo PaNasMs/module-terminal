@@ -62,3 +62,7 @@ the Linux user running the operation. Parent-directory setgid and default ACLs
 still apply; existing files are not changed. Private module state and credentials
 retain restrictive permissions. Terminal startup scripts can override the initial
 shell mask.
+
+## Supported architectures
+
+Version 0.2.9 and newer publish separate native `arm64` and `amd64` packages. The module manager selects the compatible package automatically. CI tests both architectures on Ubuntu 24.04 runners before publishing a release. Package creation verifies the server ELF architecture against the manifest. Older ARM64-only releases remain unchanged.
