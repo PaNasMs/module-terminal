@@ -41,7 +41,11 @@ func terminalHandler(allowed map[string]bool) http.HandlerFunc {
 			return
 		}
 		gid, _ := strconv.Atoi(u.Gid)
-		groups, _ := u.GroupIds()
+		groups, err := u.GroupIds()
+		if err != nil {
+			http.Error(w, "user groups unavailable", 503)
+			return
+		}
 		gids := []uint32{}
 		for _, g := range groups {
 			v, e := strconv.Atoi(g)
