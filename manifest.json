@@ -2,7 +2,7 @@
   "id": "terminal",
   "title": "Terminal",
   "description": "Interactive system-user terminal with administrator permission checks.",
-  "version": "0.2.7",
+  "version": "0.2.8",
   "api": 1,
   "core": ">=0.2.11,<0.3.0",
   "architecture": "arm64",
@@ -19,16 +19,20 @@
   "translations": {
     "en": {
       "title": "Terminal",
-      "description": "Interactive system-user terminal with administrator permission checks."
+      "description": "Interactive system-user terminal with administrator permission checks.",
+      "longDescription": "Open a Linux terminal on your NAS directly in the browser. Create several terminal tabs to keep separate commands and working directories.\n\nTerminal sessions and their output remain available when you move to another panel section. An indicator in the application bar shows active sessions and lets you end them.\n\nThis module is available to administrators. Commands run as the signed-in Linux user; operations requiring elevated privileges still require the appropriate system authorization."
     },
     "ru": {
       "title": "Терминал",
-      "description": "Интерактивный терминал системного пользователя с проверкой прав администратора."
+      "description": "Интерактивный терминал системного пользователя с проверкой прав администратора.",
+      "longDescription": "Открывайте терминал Linux вашего NAS прямо в браузере. Создавайте несколько вкладок для разных команд и рабочих папок.\n\nСеансы и их вывод сохраняются при переходе в другой раздел панели. Индикатор в верхней панели показывает активные сеансы и позволяет завершить их.\n\nМодуль доступен администраторам. Команды выполняются от имени текущего пользователя Linux; для действий с повышенными правами по-прежнему требуется соответствующее системное разрешение."
     },
     "uk": {
       "title": "Термінал",
-      "description": "Інтерактивний термінал системного користувача з перевіркою прав адміністратора."
+      "description": "Інтерактивний термінал системного користувача з перевіркою прав адміністратора.",
+      "longDescription": "Відкривайте термінал Linux вашого NAS просто в браузері. Створюйте кілька вкладок для різних команд і робочих папок.\n\nСеанси та їхній вивід зберігаються під час переходу до іншого розділу панелі. Індикатор у верхній панелі показує активні сеанси й дозволяє завершити їх.\n\nМодуль доступний адміністраторам. Команди виконуються від імені поточного користувача Linux; для дій із підвищеними правами й надалі потрібен відповідний системний дозвіл."
     }
   },
-  "license": "PolyForm-Noncommercial-1.0.0"
+  "license": "PolyForm-Noncommercial-1.0.0",
+  "longDescription": "Open a Linux terminal on your NAS directly in the browser. Create several terminal tabs to keep separate commands and working directories.\n\nTerminal sessions and their output remain available when you move to another panel section. An indicator in the application bar shows active sessions and lets you end them.\n\nThis module is available to administrators. Commands run as the signed-in Linux user; operations requiring elevated privileges still require the appropriate system authorization."
 }
