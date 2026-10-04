@@ -15,7 +15,7 @@ import { Terminal } from "@xterm/xterm";
 import { FitAddon } from "@xterm/addon-fit";
 import "@xterm/xterm/css/xterm.css";
 import "./terminal.css";
-import { Button, Icon, DialogContent } from "@panasms/ui";
+import { Button, Icon, DialogContent, SectionNav } from "@panasms/ui";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Link } from "react-router-dom";
 const liveSessions = new Set<number>();
@@ -129,7 +129,15 @@ function TerminalIndicator() {
     </>
   );
 }
-function TerminalSession({ visible, id }: { visible: boolean; id: number }) {
+function TerminalSession({
+  visible,
+  id,
+  onClose,
+}: {
+  visible: boolean;
+  id: number;
+  onClose: () => void;
+}) {
   const host = useRef<HTMLDivElement>(null);
   const activate = useRef<(() => void) | null>(null);
   const [connection, setConnection] = useState("idle");
@@ -207,9 +215,9 @@ function TerminalSession({ visible, id }: { visible: boolean; id: number }) {
     <section
       className="terminal-panel"
       hidden={!visible}
-      role="tabpanel"
+      role="region"
       id={`terminal-panel-${id}`}
-      aria-labelledby={`terminal-tab-${id}`}
+      aria-label={`${tr("terminal_b7135883")} ${id}`}
     >
       <div className="terminal-status-overlay">
         <span
@@ -239,6 +247,13 @@ function TerminalSession({ visible, id }: { visible: boolean; id: number }) {
             <Icon path={mdiRefresh} />
           </Button>
         )}
+        <Button
+          title={tr("close_terminal_93e0366b")}
+          aria-label={`${tr("close_terminal_93e0366b")} ${id}`}
+          onClick={onClose}
+        >
+          <Icon path={mdiClose} />
+        </Button>
       </div>
       <div ref={host} className="terminal-session-host" />
     </section>
@@ -279,70 +294,30 @@ export function TerminalPage({ active = true }: { active?: boolean }) {
           </p>
         </div>
       </div>
-      <div className="tabbed-page terminal-workspace">
-        <div
-          className="tabs terminal-tabs"
-          role="tablist"
-          aria-label={tr("terminal_b7135883")}
-        >
-          {tabs.map((id) => (
-            <div
-              className="terminal-tab"
-              data-state={selected === id ? "active" : "inactive"}
-              key={id}
-            >
-              <button
-                data-state={selected === id ? "active" : "inactive"}
-                role="tab"
-                id={`terminal-tab-${id}`}
-                aria-controls={`terminal-panel-${id}`}
-                aria-selected={selected === id}
-                tabIndex={selected === id ? 0 : -1}
-                onClick={() => setSelected(id)}
-                onKeyDown={(e) => {
-                  const index = tabs.indexOf(id);
-                  const target =
-                    e.key === "ArrowRight"
-                      ? tabs[(index + 1) % tabs.length]
-                      : e.key === "ArrowLeft"
-                        ? tabs[(index + tabs.length - 1) % tabs.length]
-                        : e.key === "Home"
-                          ? tabs[0]
-                          : e.key === "End"
-                            ? tabs.at(-1)
-                            : undefined;
-                  if (target !== undefined) {
-                    e.preventDefault();
-                    setSelected(target);
-                    document.getElementById(`terminal-tab-${target}`)?.focus();
-                  }
-                }}
-              >
-                <Icon path={mdiConsole} />
-                {tr("terminal_b7135883")} {id}
-              </button>
-              <Button
-                title={tr("close_terminal_93e0366b")}
-                aria-label={`${tr("close_terminal_93e0366b")} ${id}`}
-                onClick={() => close(id)}
-              >
-                <Icon path={mdiClose} />
-              </Button>
-            </div>
-          ))}
-          <Button
-            title={tr("open_terminal_6c5b2221")}
-            aria-label={tr("open_terminal_6c5b2221")}
-            onClick={add}
-          >
-            <Icon path={mdiPlus} />
-          </Button>
-        </div>
+      <div className="section-layout terminal-workspace">
+        <SectionNav
+          label={tr("terminal_b7135883")}
+          tabs={false}
+          value={String(selected)}
+          onChange={(id) => setSelected(Number(id))}
+          items={tabs.map((id) => ({
+            id: String(id),
+            title: `${tr("terminal_b7135883")} ${id}`,
+            icon: mdiConsole,
+          }))}
+          footer={
+            <Button onClick={add}>
+              <Icon path={mdiPlus} />
+              {tr("open_terminal_6c5b2221")}
+            </Button>
+          }
+        />
         {tabs.map((id) => (
           <TerminalSession
             key={id}
             id={id}
             visible={active && id === selected}
+            onClose={() => close(id)}
           />
         ))}
         {!tabs.length && (
