@@ -145,6 +145,8 @@ function TerminalSession({
   const [status, setStatus] = useState("");
   useEffect(() => {
     if (!host.current) return;
+    Terminal.strings.promptLabel = tr("terminalInput");
+    Terminal.strings.tooMuchOutput = tr("tooMuchOutput");
     const term = new Terminal({
       cursorBlink: !matchMedia("(prefers-reduced-motion: reduce)").matches,
       screenReaderMode: true,
@@ -155,6 +157,14 @@ function TerminalSession({
     const fit = new FitAddon();
     term.loadAddon(fit);
     term.open(host.current);
+    const translateInput = () => {
+      Terminal.strings.promptLabel = tr("terminalInput");
+      Terminal.strings.tooMuchOutput = tr("tooMuchOutput");
+      term.textarea?.setAttribute("aria-label", tr("terminalInput"));
+    };
+    const languageObserver = new MutationObserver(translateInput);
+    languageObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["lang"] });
+    translateInput();
     const fitVisible = () => {
       if (host.current?.offsetWidth) fit.fit();
     };
@@ -205,6 +215,7 @@ function TerminalSession({
       activate.current = null;
       socket.onopen = socket.onmessage = socket.onclose = socket.onerror = null;
       socket.close();
+      languageObserver.disconnect();
       term.dispose();
     };
   }, [attempt]);
