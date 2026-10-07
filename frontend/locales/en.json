@@ -13,5 +13,7 @@
   "returnToTerminal": "Return to terminals",
   "stopAll": "Close all terminals",
   "stopAllWarning": "Close all terminal sessions in this browser tab? Running commands may be interrupted and terminal output will be cleared.",
-  "cancel": "Cancel"
+  "cancel": "Cancel",
+  "terminalInput": "Terminal input",
+  "tooMuchOutput": "Too much output to announce. Navigate to the rows to read it."
 }
