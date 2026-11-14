@@ -1,11 +1,12 @@
 {
   "name": "@panasms/module-terminal",
   "private": true,
-  "version": "0.2.13",
+  "version": "0.2.14",
   "type": "module",
   "scripts": {
     "build": "tsc && vite build",
-    "test": "python3 scripts/check.py"
+    "test": "python3 scripts/check.py",
+    "test:confirmations": "node scripts/test_confirmations.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.1",
