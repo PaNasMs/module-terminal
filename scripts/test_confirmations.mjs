@@ -408,6 +408,65 @@ try {
   await expect(page.locator("[data-terminal-open]").first()).toBeFocused();
   await page.close();
 
+  for (const width of [1440, 320]) {
+    const offRoutePage = await visit("en", "light", "solid", width);
+    const labels = dictionaries.en;
+    await offRoutePage.evaluate(() => window.__terminalSockets[0].open());
+    await offRoutePage
+      .getByRole("link", { name: "Leave terminal", exact: true })
+      .click();
+    const activity = offRoutePage.locator(".terminal-activity > summary");
+    await expect(activity).toContainText("1");
+    await activity.click();
+    await offRoutePage
+      .getByRole("button", { name: labels.stopAll, exact: true })
+      .click();
+    const offRouteDialog = offRoutePage.getByRole("dialog");
+    const offRouteCancel = offRouteDialog.getByRole("button", {
+      name: labels.cancel,
+      exact: true,
+    });
+    await expect(offRouteCancel).toBeFocused();
+    await offRouteCancel.click();
+    await expect(activity).toBeFocused();
+    await expect(activity).toContainText("1");
+    assert.deepEqual(
+      await offRoutePage.evaluate(() => window.__terminalCloseCalls),
+      [],
+      `${width}px off-route Cancel leaves the activity indicator and socket intact`,
+    );
+
+    await activity.click();
+    await offRoutePage
+      .getByRole("button", { name: labels.stopAll, exact: true })
+      .click();
+    const closeLast = offRouteDialog.getByRole("button", {
+      name: labels.terminalCloseTitle.replace("{{id}}", "1"),
+      exact: true,
+    });
+    await closeLast.click();
+    await expect
+      .poll(() => offRoutePage.evaluate(() => window.__terminalCloseCalls))
+      .toEqual([0]);
+    await expect(activity).toHaveCount(0);
+    const hiddenSections = offRoutePage.getByTestId("hidden-sections-control");
+    const visibleSections = offRoutePage.getByTestId("sections-control");
+    await expect(hiddenSections).toBeHidden();
+    await expect(visibleSections).toBeFocused();
+    assert.equal(
+      await hiddenSections.evaluate((hidden) =>
+        Boolean(
+          hidden.compareDocumentPosition(
+            document.querySelector('[data-testid="sections-control"]'),
+          ) & Node.DOCUMENT_POSITION_FOLLOWING,
+        ),
+      ),
+      true,
+      "the visible shell Sections control follows a hidden duplicate in document order",
+    );
+    await offRoutePage.close();
+  }
+
   for (const language of ["en", "ru", "uk"]) {
     for (const theme of ["light", "dark"]) {
       for (const surface of ["solid", "glass"]) {

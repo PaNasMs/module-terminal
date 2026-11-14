@@ -41,6 +41,23 @@ function Fixture() {
         <Link to="/elsewhere">Leave terminal</Link>
         <Link to="/terminal">Return to terminal</Link>
       </nav>
+      <nav className="application-bar" aria-label="Shell sections">
+        <button
+          className="app-launcher"
+          data-testid="hidden-sections-control"
+          hidden
+          type="button"
+        >
+          Sections
+        </button>
+        <button
+          className="app-launcher"
+          data-testid="sections-control"
+          type="button"
+        >
+          Sections
+        </button>
+      </nav>
       <header>
         <Indicator />
       </header>

@@ -48,13 +48,15 @@ function registerSession(id: number, registered: boolean) {
 function closeSessions(ids: number[]) {
   stopListeners.forEach((stop) => stop(ids));
 }
-function openTerminalControl() {
-  return (
-    Array.from(
-      document.querySelectorAll<HTMLElement>("[data-terminal-open]"),
-    ).find(
+function terminalReturnFocusControl() {
+  const available = (selector: string) =>
+    Array.from(document.querySelectorAll<HTMLElement>(selector)).find(
       (button) => button.getClientRects().length && !button.closest("[inert]"),
-    ) ?? null
+    );
+  return (
+    available("[data-terminal-open]") ??
+    available(".application-bar .app-launcher") ??
+    null
   );
 }
 function TerminalCloseDialog({
@@ -89,14 +91,15 @@ function TerminalCloseDialog({
             >[0],
           ) => {
             if (!returnFocus) return;
-            event.preventDefault();
             const target = returnFocus();
             if (
               target?.isConnected &&
               target.getClientRects().length &&
               !target.closest("[inert]")
-            )
+            ) {
+              event.preventDefault();
               target.focus({ preventScroll: true });
+            }
           }}
           header={<Dialog.Title>{title}</Dialog.Title>}
           footer={
@@ -204,7 +207,7 @@ function TerminalIndicator() {
           const summary = menu.current?.querySelector("summary");
           return summary?.isConnected && summary.getClientRects().length
             ? summary
-            : openTerminalControl();
+            : terminalReturnFocusControl();
         }}
       />
     </>
@@ -406,7 +409,7 @@ export function TerminalPage({ active = true }: { active?: boolean }) {
           const trigger = closeTrigger.current;
           return trigger?.isConnected && trigger.getClientRects().length
             ? trigger
-            : openTerminalControl();
+            : terminalReturnFocusControl();
         }}
       />
       <div className="page-heading">
